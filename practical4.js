@@ -1,6 +1,6 @@
 //create DateTime.js file
-module.exports.getDateTime=()=>{
-    return new Date().toDateString();
+exports.getDateTime=()=>{
+    return new Date().toLocaleDateString();
 };
 
 //create index.js file
