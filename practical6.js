@@ -1,7 +1,7 @@
 //create display.js file
-function displayMessage() {
-  console.log("Welcome to Node.js");
-  setTimeout(displayMessage, 1000);
+for(let i=0;i<10;i++){
+  setTimeout(()=>{
+      console.log("welcome to node js");
+  },i*1000);
 }
 
-displayMessage();
