@@ -1,0 +1,21 @@
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Serve static files
+app.use(express.static('public'));
+
+// Route
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Image Gallery</h1>
+        <img src="/images/pexels-therato-1933316.jpg" width="300">
+        <img src="/images/pexels-therato-3855631.jpg" width="300">
+        <img src="/images/pexels-therato-18747835.jpg" width="300">
+    `);
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(Server running at http://localhost:${PORT});
+});

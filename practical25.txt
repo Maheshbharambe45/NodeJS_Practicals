@@ -1,0 +1,41 @@
+const express = require('express');
+const session = require('express-session');
+const app = express();
+const PORT = 3000;
+// Use session middleware  
+app.use(session({
+    secret: 'mySecretKey', // Secret key to sign the session ID  
+    resave: false, // Prevents session from being saved back if unmodified  
+    saveUninitialized: true, // Saves uninitialized sessions  
+    cookie: { maxAge: 60000 } // Session expiration time (1 min)  
+}));
+// Route to create/update session data  
+app.get('/set-session', (req, res) => {
+    req.session.username = 'JohnDoe';
+    req.session.role = 'admin';
+    res.send('Session data has been set!');
+});
+// Route to retrieve session data  
+app.get('/get-session', (req, res) => {
+    if (req.session.username) {
+        res.send(`Session Data: Username - ${req.session.username}, Role - 
+${req.session.role}`);
+    } else {
+        res.send('No session found');
+    }
+});
+
+// Route to destroy session  
+app.get('/destroy-session', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.send('Error destroying session');
+        }
+        // Session destroyed successfully 
+        res.send('Session destroyed');
+    });
+});
+
+app.listen(PORT, () => {
+    console.log("server is running on port 3000");
+})

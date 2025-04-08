@@ -1,0 +1,32 @@
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const app = express();
+const PORT = 3000;
+// Use cookie-parser middleware  
+app.use(cookieParser());
+// Route to set session cookie  
+app.get('/set-session', (req, res) => {
+    res.cookie('sessionData', JSON.stringify({ username: 'JohnDoe', role: 'admin' }), {
+        maxAge:
+            60000, httpOnly: true
+    });
+    res.send('Session cookie has been set!');
+});
+// Route to read session cookie  
+app.get('/get-session', (req, res) => {
+    const sessionCookie = req.cookies.sessionData;
+    if (sessionCookie) {
+        res.send(`Session Data: ${sessionCookie}`);
+    } else {
+        res.send('No session found');
+    }
+});
+
+// Route to clear session cookie  
+app.get('/clear-session', (req, res) => {
+    res.clearCookie('sessionData');
+    res.send('Session has been cleared');
+});
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+}); 

@@ -1,0 +1,77 @@
+App.js file
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 5000;
+
+// Middleware to parse JSON request bodies
+app.use(bodyParser.json());
+
+// Sample in-memory student data
+let students = [
+  { id: 1, name: 'John Doe', age: 20, major: 'Computer Science' },
+  { id: 2, name: 'Jane Smith', age: 22, major: 'Mechanical Engineering' },
+  { id: 3, name: 'Alice Johnson', age: 21, major: 'Biology' },
+];
+// Route to display all students
+app.get('/students', (req, res) => {
+  res.json(students);
+});
+// Route to display a single student by ID
+app.get('/students/:id', (req, res) => {
+  const studentId = parseInt(req.params.id);
+  const student = students.find(s => s.id === studentId);
+  
+  if (!student) {
+    return res.status(404).send('Student not found');
+  }
+  
+  res.json(student);
+});
+
+// Route to add a new student
+app.post('/students', (req, res) => {
+  const { name, age, major } = req.body;
+  const newStudent = {
+    id: students.length + 1,  // Incremental ID for simplicity
+    name,
+    age,
+    major
+  };
+  
+  students.push(newStudent);
+  res.status(201).json(newStudent);
+});
+
+// Route to update an existing student
+app.put('/students/:id', (req, res) => {
+  const studentId = parseInt(req.params.id);
+  const { name, age, major } = req.body;
+  const student = students.find(s => s.id === studentId);
+  
+  if (!student) {
+    return res.status(404).send('Student not found');
+  }
+  student.name = name || student.name;
+  student.age = age || student.age;
+  student.major = major || student.major;
+  
+  res.json(student);
+});
+
+// Route to delete a student
+app.delete('/students/:id', (req, res) => {
+  const studentId = parseInt(req.params.id);
+  const studentIndex = students.findIndex(s => s.id === studentId);
+  
+  if (studentIndex === -1) {
+    return res.status(404).send('Student not found');
+  }
+
+  students.splice(studentIndex, 1);
+  res.status(200).send('Student deleted');
+});
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});

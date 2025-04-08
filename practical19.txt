@@ -1,0 +1,64 @@
+Route.js file
+const express = require('express');
+const router = express.Router();
+
+// Route for the home page
+router.get('/', (req, res) => {
+    res.send('Welcome to Adventure Trails!');
+});
+// Route to list all trails
+router.get('/trails', (req, res) => {
+    const trails = [
+        { name: 'Mountain Adventure', difficulty: 'Hard' },
+        { name: 'River Exploration', difficulty: 'Medium' },
+        { name: 'Forest Trek', difficulty: 'Easy' }
+    ];
+    res.json(trails);
+});
+
+// Route to show details of a specific trail
+router.get('/trails/:id', (req, res) => {
+    const trails = [
+        { id: 1, name: 'Mountain Adventure', difficulty: 'Hard', description: 'A challenging mountain hike.' },
+        { id: 2, name: 'River Exploration', difficulty: 'Medium', description: 'A river-side trek with scenic views.' },
+        { id: 3, name: 'Forest Trek', difficulty: 'Easy', description: 'A peaceful walk through the forest.' }
+    ];
+
+    const trail = trails.find(t => t.id === parseInt(req.params.id));
+
+    if (!trail) {
+        return res.status(404).send('Trail not found');
+    }
+    res.json(trail);
+});
+
+// Route to create a new trail (using POST method)
+router.post('/trails', (req, res) => {
+    const newTrail = req.body;
+    // Add logic to save the new trail to a database (if necessary)
+    res.status(201).send(`New trail added: ${newTrail.name}`);
+});
+module.exports = router;
+
+
+
+
+App.js file
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON body
+app.use(bodyParser.json());
+
+// Import routes
+const route = require('./routes/route');
+
+// Use the routes defined in 'routes/route.js'
+app.use('/api', route);
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Adventure Trails app running on http://localhost:${port}`);
+});

@@ -1,0 +1,5 @@
+App.js file
+function uppercase(str){
+    return str.toUpperCase();
+}
+console.log(uppercase("hey node.js"));

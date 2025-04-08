@@ -1,0 +1,8 @@
+DateTime.js file
+module.exports.getDateTime=()=>{
+    return new Date().toDateString();
+};
+
+App.js file
+const dateTime = require("./DateTime");
+console.log("Date and time is ",dateTime.getDateTime());

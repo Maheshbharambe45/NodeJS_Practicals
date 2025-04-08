@@ -1,0 +1,171 @@
+server.js file
+const express = require('express'); 
+const app = express(); 
+const PORT = 3000; 
+// Set view engine 
+app.set('view engine', 'ejs'); 
+// Serve static files 
+app.use(express.static('public')); 
+// Main route - renders page 
+app.get('/', (req, res) => { 
+const currentTime = new Date().toLocaleTimeString(); // Format: HH:MM:SS 
+res.render('index', { title: "Current Time", time: currentTime }); 
+}); 
+// API route for dynamic time update 
+app.get('/time', (req, res) => { 
+res.json({ time: new Date().toLocaleTimeString() }); // Sends only the current time 
+}); 
+// Start server 
+app.listen(PORT, () => { 
+console.log(`Server running at http://localhost:${PORT}`); 
+});
+
+
+
+
+
+datetime.ejs
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title><%= title %></title> 
+    <link rel="stylesheet" href="/style.css"> <!-- Link to CSS --> 
+</head> 
+<body> 
+    <div class="container"> 
+        <h1>Current Time & Date</h1> 
+ 
+        <!-- Digital Clock --> 
+        <p id="time"><%= time %></p>  
+         
+        <!-- Analog Clock --> 
+        <div class="clock"> 
+            <div class="hand hour" id="hour-hand"></div> 
+            <div class="hand minute" id="minute-hand"></div> 
+            <div class="hand second" id="second-hand"></div> 
+            <div class="center-circle"></div> 
+        </div> 
+ 
+        <!-- Calendar --> 
+        <div class="calendar"> 
+            <p id="current-date"></p> 
+        </div> 
+    </div> 
+ 
+    <script> 
+        function updateTime() { 
+            fetch('/time') 
+                .then(response => response.json()) 
+                .then(data => { 
+                    document.getElementById("time").innerText = data.time; 
+                    updateAnalogClock(); 
+                    updateCalendar(); 
+                }) 
+                .catch(error => console.error("Error fetching time:", error)); 
+        } 
+ 
+        function updateAnalogClock() { 
+            const now = new Date(); 
+            const hours = now.getHours() % 12; 
+            const minutes = now.getMinutes(); 
+            const seconds = now.getSeconds(); 
+ 
+            const hourDeg = (hours * 30) + (minutes / 2); 
+            const minuteDeg = (minutes * 6); 
+            const secondDeg = (seconds * 6); 
+ 
+            document.getElementById("hour-hand").style.transform = `rotate(${hourDeg}deg)`; 
+            document.getElementById("minute-hand").style.transform = `rotate(${minuteDeg}deg)`; 
+            document.getElementById("second-hand").style.transform = `rotate(${secondDeg}deg)`; 
+        } 
+ 
+        function updateCalendar() { 
+            const now = new Date(); 
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }; 
+            document.getElementById("current-date").innerText = now.toLocaleDateString('en-US', options); 
+        } 
+ 
+        setInterval(updateTime, 1000); 
+        updateCalendar(); 
+    </script> 
+</body> 
+</html>
+
+
+style.css
+body { 
+    font-family: 'Arial', sans-serif; 
+    background-color: #121212; 
+    color: #fff; 
+    text-align: center; 
+    margin: 0; 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+} 
+ 
+/* Digital Clock Style */ 
+#time { 
+    font-size: 3em; 
+    font-weight: bold; 
+    color: #0ff; 
+    background: #222; 
+    padding: 15px 30px; 
+    border-radius: 10px; 
+    box-shadow: 0px 0px 15px rgba(0, 255, 204, 0.8); 
+} 
+ 
+/* Analog Clock */ 
+.clock { 
+    width: 200px; 
+    height: 200px; 
+    border: 10px solid #00ffcc; 
+    border-radius: 50%; 
+    position: relative; 
+    margin-top: 20px; 
+    background: #222; 
+    box-shadow: 0px 0px 15px rgba(0, 255, 204, 0.8); 
+} 
+ 
+/* Hands */ 
+.hand { 
+    position: absolute; 
+    bottom: 50%; 
+    left: 50%; 
+    transform-origin: bottom; 
+    transform: rotate(0deg); 
+    transition: transform 0.5s ease-in-out; 
+} 
+ 
+.hour { width: 6px; height: 50px; background-color: #fff; margin-left: -3px; } 
+.minute { width: 4px; height: 70px; background-color: #00ffcc; margin-left: -2px; } 
+.second { width: 2px; height: 80px; background-color: #ff4444; margin-left: -1px; } 
+ 
+/* Center Circle */ 
+.center-circle { 
+    width: 12px; 
+    height: 12px; 
+    background: #fff; 
+    border-radius: 50%; 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+} 
+ 
+/* Calendar Styling */ 
+.calendar { 
+    margin-top: 20px; 
+    padding: 15px 25px; 
+    background: #222; 
+    color: #00ffcc; 
+    font-size: 1.5em; 
+    font-weight: bold; 
+    border-radius: 10px; 
+    box-shadow: 0px 0px 15px rgba(0, 255, 204, 0.8); 
+}

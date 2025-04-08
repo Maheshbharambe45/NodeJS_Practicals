@@ -1,0 +1,22 @@
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+// Example Function 2: Sum of Two Numbers
+function sum(a, b) {
+  return a + b;
+}
+function sub(a, b) {
+  return a - b;
+}
+function mul(a, b) {
+  return a * b;
+}
+function div(a, b) {
+  return a / b;
+}
+// Call the functions
+greet('Alice');
+console.log('Sum of 3 and 4:', sum(3, 4));
+console.log('Sub of 3 and 4:', sub(3, 4));
+console.log('Mul of 3 and 4:', mul(3, 4));
+console.log('Div of 3 and 4:', div(3, 4));

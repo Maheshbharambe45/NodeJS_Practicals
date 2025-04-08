@@ -1,0 +1,47 @@
+App.js file
+const express = require('express');
+const morgan = require('morgan');  // For logging
+const app = express();
+
+// Middleware to parse JSON data
+app.use(express.json());
+
+// Use morgan for logging HTTP requests
+app.use(morgan('combined'));
+
+// Handle POST requests at '/submit'
+app.post('/submit', (req, res) => {
+    const { name, email } = req.body;
+
+    // Check if the name or email is missing
+    if (!name || !email) {
+        return res.status(400).json({
+            error: 'Name and email are required fields.',
+        });
+    }
+
+    // Respond with success
+    res.status(200).json({
+        message: `Submission received. Name: ${name}, Email: ${email}`,
+    });
+});
+
+// Handle 404 errors for undefined routes
+app.use((req, res) => {
+    res.status(404).json({ error: 'Not Found' });
+});
+
+// Start the server on port 3000
+const port = 3000;
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});
+
+
+
+
+Login.json file
+{
+    "name": "mahesh",
+    "email": "bharambemahesh7@gmail.com"
+}
